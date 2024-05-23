@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="https://funnydragonk.github.io/funnydragon.github.io">
-  <title>Archives: 2024/5 | Hexo</title>
+  <title>[stable-diffusion-webui] Shell脚本 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="https://funnydragonk.github.io/funnydragon.github.io/archives/2024/05/index.html">
+  <meta name="description" content="介绍stable-diffusion-webui中使用了一个shell脚本webui.sh进行启动，本文旨在通过阅读理解该脚本顺便学习一些shell脚本语法。成文流程如下：阅读webui.sh-&gt;遇到读不懂的地方-&gt;问chatGPT要解释-&gt;学习语法，同时将代码片段和关键解释记录下来。 shell脚本理解1SCRIPT_DIR&#x3D;$( cd -- &quot;$( dirname">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[stable-diffusion-webui] Shell脚本">
+<meta property="og:url" content="https://funnydragonk.github.io/funnydragon.github.io/2024/05/22/stable-diffusion-webui-Shell%E8%84%9A%E6%9C%AC/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="介绍stable-diffusion-webui中使用了一个shell脚本webui.sh进行启动，本文旨在通过阅读理解该脚本顺便学习一些shell脚本语法。成文流程如下：阅读webui.sh-&gt;遇到读不懂的地方-&gt;问chatGPT要解释-&gt;学习语法，同时将代码片段和关键解释记录下来。 shell脚本理解1SCRIPT_DIR&#x3D;$( cd -- &quot;$( dirname">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-05-22T09:00:20.000Z">
+<meta property="article:modified_time" content="2024-05-23T08:42:26.374Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -150,103 +154,368 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-stable-diffusion-webui-Shell脚本" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      [stable-diffusion-webui] Shell脚本
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/funnydragon.github.io/archives/2024" class="archive-year">2024</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/funnydragon.github.io/2024/05/22/stable-diffusion-webui-Shell%E8%84%9A%E6%9C%AC/" class="archive-article-date">
+
+        
+        <a href="/funnydragon.github.io/2024/05/22/stable-diffusion-webui-Shell%E8%84%9A%E6%9C%AC/" class="archive-article-date">
   	<time datetime="2024-05-22T09:00:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-05-22</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/funnydragon.github.io/2024/05/22/stable-diffusion-webui-Shell%E8%84%9A%E6%9C%AC/">[stable-diffusion-webui] Shell脚本</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>stable-diffusion-webui中使用了一个shell脚本<code>webui.sh</code>进行启动，本文旨在通过阅读理解该脚本顺便学习一些shell脚本语法。成文流程如下：阅读<code>webui.sh</code>-&gt;遇到读不懂的地方-&gt;问chatGPT要解释-&gt;学习语法，同时将代码片段和关键解释记录下来。</p>
+<h2 id="shell脚本理解"><a href="#shell脚本理解" class="headerlink" title="shell脚本理解"></a>shell脚本理解</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SCRIPT_DIR=$( cd -- &quot;$( dirname -- &quot;$&#123;BASH_SOURCE[0]&#125;&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )</span><br></pre></td></tr></table></figure>
 
-        <div class="article-info info-on-right">
-          
-          
+<p>这个Shell命令用于获取正在执行的脚本文件所在的目录路径，并将其存储在变量 <code>SCRIPT_DIR</code> 中:</p>
+<ol>
+<li>**<code>SCRIPT_DIR=$( ... )</code>**： 这是一个变量赋值的语法，它将命令的输出赋值给变量 <code>SCRIPT_DIR</code>。在这里，<code>$( ... )</code> 是命令替换语法，表示执行其中的命令，并将其结果返回。</li>
+<li>**<code>cd -- &quot;$( dirname -- &quot;$&#123;BASH_SOURCE[0]&#125;&quot; )&quot; &amp;&gt; /dev/null</code>**：<ul>
+<li><code>dirname -- &quot;$&#123;BASH_SOURCE[0]&#125;&quot;</code>：<code>&quot;$&#123;BASH_SOURCE[0]&#125;&quot;</code> 是一个特殊的变量，它包含了当前正在执行的Shell脚本的文件名（包括路径）。<code>dirname</code> 命令用于提取文件路径部分，即脚本文件所在的目录路径。</li>
+<li><code>cd -- ...</code>：<code>cd</code> 命令用于切换工作目录到指定路径。<code>--</code> 是一个标志，用于告诉<code>cd</code>命令后面的参数不会以 <code>-</code> 开头。这是一种安全的做法，因为如果目录名以 <code>-</code> 开头，会被误认为是选项。</li>
+<li><code>&amp;&gt; /dev/null</code>：将标准输出和标准错误重定向到 <code>/dev/null</code>，即丢弃命令执行过程中的任何输出。</li>
+</ul>
+</li>
+<li>**<code>&amp;&amp; pwd</code>**： 如果前面的命令执行成功（即没有错误），则执行 <code>pwd</code> 命令，用于获取当前工作目录的绝对路径。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">If run from macOS, load defaults from webui-macos-env.sh</span></span><br><span class="line">if [[ &quot;$OSTYPE&quot; == &quot;darwin&quot;* ]]; then</span><br><span class="line">    if [[ -f &quot;$SCRIPT_DIR&quot;/webui-macos-env.sh ]]</span><br><span class="line">        then</span><br><span class="line">        source &quot;$SCRIPT_DIR&quot;/webui-macos-env.sh</span><br><span class="line">    fi</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 
+<p>这段Shell脚本的作用是如果当前是MacOS操作系统，则从<code>webui-macos-env.sh</code>文件中加载参数:</p>
+<ol>
+<li><code>if [[ &quot;$OSTYPE&quot; == &quot;darwin&quot;* ]]; then</code>：<ul>
+<li>这是一个条件语句，它检查操作系统类型是否是MacOS。<code>$OSTYPE</code> 是一个环境变量，它包含了当前操作系统的类型。</li>
+<li><code>[[ &quot;$OSTYPE&quot; == &quot;darwin&quot;* ]]</code> 是一个模式匹配操作，检查 <code>$OSTYPE</code> 是否以字符串 “darwin” 开头。如果是，则条件成立，执行接下来的操作。</li>
+</ul>
+</li>
+<li><code>if [[ -f &quot;$SCRIPT_DIR&quot;/webui-macos-env.sh ]]; then</code>：<ul>
+<li>这也是一个条件语句，它检查文件是否存在。</li>
+<li><code>[[ -f &quot;$SCRIPT_DIR&quot;/webui-macos-env.sh ]]</code> 检查 <code>$SCRIPT_DIR</code> 目录下是否存在名为 “webui-macos-env.sh” 的文件。如果文件存在，则条件成立，执行接下来的操作。</li>
+</ul>
+</li>
+<li><code>source &quot;$SCRIPT_DIR&quot;/webui-macos-env.sh</code>：<ul>
+<li><code>source</code> 命令用于在当前Shell环境中执行指定脚本文件，并将其中的命令应用到当前Shell会话中。</li>
+<li>这一行的作用是执行位于 <code>$SCRIPT_DIR</code> 目录下的 “webui-macos-env.sh” 脚本文件，将其中的命令应用到当前Shell会话中。</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">If <span class="variable">$venv_dir</span> is <span class="string">&quot;-&quot;</span>, <span class="keyword">then</span> <span class="built_in">disable</span> venv support</span></span><br><span class="line">use_venv=1</span><br><span class="line">if [[ $venv_dir == &quot;-&quot; ]]; then</span><br><span class="line">  use_venv=0</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>若未定义venv_dir变量，$venv_dir为空字符。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Set defaults</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Install directory without trailing slash</span></span><br><span class="line">if [[ -z &quot;$&#123;install_dir&#125;&quot; ]]</span><br><span class="line">then</span><br><span class="line">    install_dir=&quot;$SCRIPT_DIR&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>如果变量 <code>$install_dir</code> 未定义或为空，则将其设置为 <code>$SCRIPT_DIR</code> 变量的值:</p>
+<ul>
+<li><code>if [[ -z &quot;$&#123;install_dir&#125;&quot; ]]</code>：这是一个条件判断语句，检查变量 <code>$install_dir</code> 是否为空。<code>-z</code> 选项用于检查变量是否为空。如果 <code>$install_dir</code> 为空，则条件成立，执行接下来的操作。</li>
+<li><code>install_dir=&quot;$SCRIPT_DIR&quot;</code>：如果 <code>$install_dir</code> 为空，则将其设置为 <code>$SCRIPT_DIR</code> 变量的值。这样，如果 <code>$install_dir</code> 未定义或为空，就会使用 <code>$SCRIPT_DIR</code> 变量的值作为默认安装目录。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">git executable</span></span><br><span class="line">if [[ -z &quot;$&#123;GIT&#125;&quot; ]]</span><br><span class="line">then</span><br><span class="line">    export GIT=&quot;git&quot;</span><br><span class="line">else</span><br><span class="line">    export GIT_PYTHON_GIT_EXECUTABLE=&quot;$&#123;GIT&#125;&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p><code>GIT_PYTHON_GIT_EXECUTABLE</code> 环境变量通常在使用Python编写的Git客户端库中被使用，例如 <code>git-python</code> 库。这个环境变量用来指定Git可执行文件的路径，以便Python代码可以调用Git命令执行Git操作。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">python3 venv without trailing slash (defaults to <span class="variable">$&#123;install_dir&#125;</span>/<span class="variable">$&#123;clone_dir&#125;</span>/venv)</span></span><br><span class="line">if [[ -z &quot;$&#123;venv_dir&#125;&quot; ]] &amp;&amp; [[ $use_venv -eq 1 ]]</span><br><span class="line">then</span><br><span class="line">    venv_dir=&quot;venv&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>这段Shell脚本用于设置Python虚拟环境（venv）的路径。如果变量 <code>$venv_dir</code> 未定义或为空，并且 <code>$use_venv</code> 变量的值等于 <code>1</code>，则将其设置为默认值 <code>&quot;venv&quot;</code>。</p>
+<p>解释如下：</p>
+<ul>
+<li><code>if [[ -z &quot;$&#123;venv_dir&#125;&quot; ]] &amp;&amp; [[ $use_venv -eq 1 ]]</code>：这是一个条件判断语句，检查两个条件是否同时成立：<ul>
+<li><code>-z &quot;$&#123;venv_dir&#125;&quot;</code>：检查变量 <code>$venv_dir</code> 是否为空。</li>
+<li><code>$use_venv -eq 1</code>：检查变量 <code>$use_venv</code> 的值是否等于 <code>1</code>。 如果这两个条件同时成立，则执行接下来的操作。</li>
+</ul>
+</li>
+<li><code>venv_dir=&quot;venv&quot;</code>：如果 <code>$venv_dir</code> 为空，并且 <code>$use_venv</code> 的值等于 <code>1</code>，则将其设置为默认值 <code>&quot;venv&quot;</code>。这样，如果用户没有显式指定Python虚拟环境的路径，并且 <code>$use_venv</code> 为 <code>1</code>，就会使用默认值 <code>&quot;venv&quot;</code> 作为虚拟环境的路径。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">this script cannot be run as root by default</span></span><br><span class="line">can_run_as_root=0</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash"><span class="built_in">read</span> any <span class="built_in">command</span> line flags to the webui.sh script</span></span><br><span class="line">while getopts &quot;f&quot; flag &gt; /dev/null 2&gt;&amp;1</span><br><span class="line">do</span><br><span class="line">    case $&#123;flag&#125; in</span><br><span class="line">        f) can_run_as_root=1;;</span><br><span class="line">        *) break;;</span><br><span class="line">    esac</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>这段Shell脚本用于读取传递给 <code>webui.sh</code> 脚本的命令行标志（flags）。在这里，<code>-f</code> 是一个可选的标志，表示脚本是否可以以root权限运行。详细解释如下：</p>
+<ul>
+<li><code>while getopts &quot;f&quot; flag &gt; /dev/null 2&gt;&amp;1</code>：这是一个 <code>while</code> 循环，用于解析命令行标志。<code>getopts</code> 命令用于解析命令行参数，并将选项存储在指定的变量flag中。<code>&quot;f&quot;</code> 表示只接受 <code>-f</code> 选项。<code>&gt; /dev/null 2&gt;&amp;1</code> 用于将 <code>getopts</code> 命令的输出和错误输出重定向到 <code>/dev/null</code>，即丢弃。</li>
+<li><code>do</code>：循环体的开始。</li>
+<li><code>case $&#123;flag&#125; in</code>：这是一个 <code>case</code> 语句，用于根据命令行标志的值执行不同的操作。</li>
+<li><code>f)</code>：表示如果命令行标志是 <code>-f</code>，则执行以下操作。</li>
+<li><code>can_run_as_root=1</code>：将变量 <code>can_run_as_root</code> 设置为 <code>1</code>，表示脚本可以以root权限运行。</li>
+<li><code>*)</code>：表示如果命令行标志不是 <code>-f</code>，则执行以下操作。</li>
+<li><code>break</code>：跳出循环，因为我们只接受 <code>-f</code> 选项，其他选项会终止循环。</li>
+<li><code>esac</code>：<code>case</code> 语句结束。</li>
+<li><code>done</code>：循环体的结束。</li>
+</ul>
+<p>-f选项例子：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ./webui.sh -f</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Pretty <span class="built_in">print</span></span></span><br><span class="line">delimiter=&quot;################################################################&quot;</span><br><span class="line"></span><br><span class="line">printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">printf &quot;\e[1m\e[32mInstall script for stable-diffusion + Web UI\n&quot;</span><br><span class="line">printf &quot;\e[1m\e[34mTested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.\e[0m&quot;</span><br><span class="line">printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><code>\n</code> 用于打印一个空行，<code>%s</code> 表示字符串，<code>&quot;$&#123;delimiter&#125;&quot;</code> 是要打印的分隔符。</p>
+</li>
+<li><p><code>\e</code> 是转义序列的开始。</p>
+</li>
+<li><p><code>[1m</code> 表示加粗。</p>
+</li>
+<li><p><code>[32m</code> 表示绿色文本。</p>
+</li>
+<li><p><code>&quot;Install script for stable-diffusion + Web UI\n&quot;</code> 是要打印的文本内容。</p>
+</li>
+<li><p><code>\n</code> 表示换行。</p>
+</li>
+<li><p><code>[34m</code> 表示蓝色文本。</p>
+</li>
+<li><p><code>\e[0m</code> 用于重置所有文本属性，恢复默认文本样式。</p>
+<ul>
+<li>如果不使用 <code>\e[0m</code> 重置文本属性，所有后续输出都会继承之前设置的属性。例如，如果你只设置文本为绿色而不重置，则后续所有文本都会是绿色，直到终端会话结束或其他转义码更改文本属性。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Do not run as root</span></span><br><span class="line">if [[ $(id -u) -eq 0 &amp;&amp; can_run_as_root -eq 0 ]]</span><br><span class="line">then</span><br><span class="line">    printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">    printf &quot;\e[1m\e[31mERROR: This script must not be launched as root, aborting...\e[0m&quot;</span><br><span class="line">    printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">    exit 1</span><br><span class="line">else</span><br><span class="line">    printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">    printf &quot;Running on \e[1m\e[32m%s\e[0m user&quot; &quot;$(whoami)&quot;</span><br><span class="line">    printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>$(id -u)</code>: 获取当前用户的UID。UID为0表示root用户。</li>
+<li><code>$(whoami)</code>: 获取当前用户名。</li>
+<li><code>\e[31m</code>：将文本颜色设置为红色。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if [[ $(getconf LONG_BIT) = 32 ]]</span><br><span class="line">then</span><br><span class="line">    printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">    printf &quot;\e[1m\e[31mERROR: Unsupported Running on a 32bit OS\e[0m&quot;</span><br><span class="line">    printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">    exit 1</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>检查操作系统位数：</p>
+<ul>
+<li><code>getconf LONG_BIT</code>：获取操作系统的位数。返回 <code>32</code> 表示32位，返回 <code>64</code> 表示64位。</li>
+<li><code>$(getconf LONG_BIT)</code>：将 <code>getconf LONG_BIT</code> 的输出作为子命令执行，并返回结果。</li>
+<li><code>= 32</code>：判断 <code>getconf LONG_BIT</code> 的结果是否等于 <code>32</code>。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Check prerequisites</span></span><br><span class="line">gpu_info=$(lspci 2&gt;/dev/null | grep -E &quot;VGA|Display&quot;)</span><br><span class="line">case &quot;$gpu_info&quot; in</span><br><span class="line">    *&quot;Navi 1&quot;*)</span><br><span class="line">        export HSA_OVERRIDE_GFX_VERSION=10.3.0</span><br><span class="line">        if [[ -z &quot;$&#123;TORCH_COMMAND&#125;&quot; ]]</span><br><span class="line">        then</span><br><span class="line">            pyv=&quot;$($&#123;python_cmd&#125; -c &#x27;import sys; print(f&quot;&#123;sys.version_info[0]&#125;.&#123;sys.version_info[1]:02d&#125;&quot;)&#x27;)&quot;</span><br><span class="line">            # Using an old nightly compiled against rocm 5.2 for Navi1, see https://github.com/pytorch/pytorch/issues/106728#issuecomment-1749511711</span><br><span class="line">            if [[ $pyv == &quot;3.8&quot; ]]</span><br><span class="line">            then</span><br><span class="line">                export TORCH_COMMAND=&quot;pip install https://download.pytorch.org/whl/nightly/rocm5.2/torch-2.0.0.dev20230209%2Brocm5.2-cp38-cp38-linux_x86_64.whl https://download.pytorch.org/whl/nightly/rocm5.2/torchvision-0.15.0.dev20230209%2Brocm5.2-cp38-cp38-linux_x86_64.whl&quot;</span><br><span class="line">            elif [[ $pyv == &quot;3.9&quot; ]]</span><br><span class="line">            then</span><br><span class="line">                export TORCH_COMMAND=&quot;pip install https://download.pytorch.org/whl/nightly/rocm5.2/torch-2.0.0.dev20230209%2Brocm5.2-cp39-cp39-linux_x86_64.whl https://download.pytorch.org/whl/nightly/rocm5.2/torchvision-0.15.0.dev20230209%2Brocm5.2-cp39-cp39-linux_x86_64.whl&quot;</span><br><span class="line">            elif [[ $pyv == &quot;3.10&quot; ]]</span><br><span class="line">            then</span><br><span class="line">                export TORCH_COMMAND=&quot;pip install https://download.pytorch.org/whl/nightly/rocm5.2/torch-2.0.0.dev20230209%2Brocm5.2-cp310-cp310-linux_x86_64.whl https://download.pytorch.org/whl/nightly/rocm5.2/torchvision-0.15.0.dev20230209%2Brocm5.2-cp310-cp310-linux_x86_64.whl&quot;</span><br><span class="line">            else</span><br><span class="line">                printf &quot;\e[1m\e[31mERROR: RX 5000 series GPUs python version must be between 3.8 and 3.10, aborting...\e[0m&quot;</span><br><span class="line">                exit 1</span><br><span class="line">            fi</span><br><span class="line">        fi</span><br><span class="line">    ;;</span><br><span class="line">    *&quot;Navi 2&quot;*) export HSA_OVERRIDE_GFX_VERSION=10.3.0</span><br><span class="line">    ;;</span><br><span class="line">    *&quot;Navi 3&quot;*) [[ -z &quot;$&#123;TORCH_COMMAND&#125;&quot; ]] &amp;&amp; \</span><br><span class="line">         export TORCH_COMMAND=&quot;pip install torch torchvision --index-url https://download.pytorch.org/whl/nightly/rocm5.7&quot;</span><br><span class="line">    ;;</span><br><span class="line">    *&quot;Renoir&quot;*) export HSA_OVERRIDE_GFX_VERSION=9.0.0</span><br><span class="line">        printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">        printf &quot;Experimental support for Renoir: make sure to have at least 4GB of VRAM and 10GB of RAM or enable cpu mode: --use-cpu all --no-half&quot;</span><br><span class="line">        printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">    ;;</span><br><span class="line">    *)</span><br><span class="line">    ;;</span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+
+<p>检查系统中的GPU型号并根据不同的GPU型号设置相应的环境变量和命令。特别是，它设置了 <code>HSA_OVERRIDE_GFX_VERSION</code> 和 <code>TORCH_COMMAND</code> 以确保合适的PyTorch版本安装。</p>
+<ul>
+<li><code>lspci</code>：列出所有PCI设备。</li>
+<li><code>2&gt;/dev/null</code>：忽略标准错误输出（防止错误信息干扰结果）。</li>
+<li><code>grep -E &quot;VGA|Display&quot;</code>：过滤包含 “VGA” 或 “Display” 的行（这些行通常包含GPU信息）。</li>
+<li><code>gpu_info</code>：保存过滤后的GPU信息。</li>
+<li>Navi 是 AMD 用来命名其一系列基于 RDNA 架构的 GPU 的代号，这段脚本是针对AMD显卡的环境配置。</li>
+<li><code>-z &quot;$&#123;variable&#125;&quot;</code>：检查变量 <code>$variable</code> 是否为空。</li>
+<li><code>&amp;&amp;</code> 逻辑与运算符</li>
+<li><code>condition 1 &amp;&amp; condition 2</code>，若<code>condition 1</code> 成立才会再执行<code>condition 2</code></li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if ! echo &quot;$gpu_info&quot; | grep -q &quot;NVIDIA&quot;;</span><br><span class="line">then</span><br><span class="line">    if echo &quot;$gpu_info&quot; | grep -q &quot;AMD&quot; &amp;&amp; [[ -z &quot;$&#123;TORCH_COMMAND&#125;&quot; ]]</span><br><span class="line">    then</span><br><span class="line">	      export TORCH_COMMAND=&quot;pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7&quot;</span><br><span class="line">    elif npu-smi info 2&gt;/dev/null</span><br><span class="line">    then</span><br><span class="line">        export TORCH_COMMAND=&quot;pip install torch==2.1.0 torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu; pip install torch_npu==2.1.0&quot;</span><br><span class="line">    fi</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>确保针对不同类型的AMD显卡能够进行适当的pytorch版本配置。</p>
+<ul>
+<li><code>echo &quot;$gpu_info&quot; | grep -q &quot;NVIDIA&quot;</code>：这是一个命令，用于在 GPU 信息中搜索包含 “NVIDIA” 的行。<code>-q</code> 选项表示静默模式，即不输出匹配的行，只返回匹配结果的状态。如果找到了匹配的行，grep 返回成功的状态（0），否则返回失败的状态（非0）。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">for preq in &quot;$&#123;GIT&#125;&quot; &quot;$&#123;python_cmd&#125;&quot;</span><br><span class="line">do</span><br><span class="line">    if ! hash &quot;$&#123;preq&#125;&quot; &amp;&gt;/dev/null</span><br><span class="line">    then</span><br><span class="line">        printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">        printf &quot;\e[1m\e[31mERROR: %s is not installed, aborting...\e[0m&quot; &quot;$&#123;preq&#125;&quot;</span><br><span class="line">        printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">        exit 1</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>这段代码是一个 <code>for</code> 循环，用于检查所需的软件是否已经安装。让我们逐步解释它的执行逻辑：</p>
+<ol>
+<li><code>for preq in &quot;$&#123;GIT&#125;&quot; &quot;$&#123;python_cmd&#125;&quot;</code>：这是一个 <code>for</code> 循环，它遍历了两个变量 <code>$&#123;GIT&#125;</code> 和 <code>$&#123;python_cmd&#125;</code> 的值。这些变量中应该包含要检查的软件的名称或路径。</li>
+<li><code>if ! hash &quot;$&#123;preq&#125;&quot; &amp;&gt;/dev/null</code>：<code>hash</code> 命令用于检查指定的命令是否可执行。<code>&amp;&gt;/dev/null</code> 用于将命令的输出重定向到 <code>/dev/null</code>，即丢弃输出。<code>!</code> 表示逻辑 NOT 运算符，如果 <code>hash</code> 命令执行失败（即命令不存在或不可执行），则条件成立。</li>
+<li>如果软件未安装，则输出错误信息，并以状态码 1 退出脚本。</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Try using TCMalloc on Linux</span></span><br><span class="line">prepare_tcmalloc() &#123;</span><br><span class="line">    if [[ &quot;$&#123;OSTYPE&#125;&quot; == &quot;linux&quot;* ]] &amp;&amp; [[ -z &quot;$&#123;NO_TCMALLOC&#125;&quot; ]] &amp;&amp; [[ -z &quot;$&#123;LD_PRELOAD&#125;&quot; ]]; then</span><br><span class="line">        # check glibc version</span><br><span class="line">        LIBC_VER=$(echo $(ldd --version | awk &#x27;NR==1 &#123;print $NF&#125;&#x27;) | grep -oP &#x27;\d+\.\d+&#x27;)</span><br><span class="line">        echo &quot;glibc version is $LIBC_VER&quot;</span><br><span class="line">        libc_vernum=$(expr $LIBC_VER)</span><br><span class="line">        # Since 2.34 libpthread is integrated into libc.so</span><br><span class="line">        libc_v234=2.34</span><br><span class="line">        # Define Tcmalloc Libs arrays</span><br><span class="line">        TCMALLOC_LIBS=(&quot;libtcmalloc(_minimal|)\.so\.\d&quot; &quot;libtcmalloc\.so\.\d&quot;)</span><br><span class="line">        # Traversal array</span><br><span class="line">        for lib in &quot;$&#123;TCMALLOC_LIBS[@]&#125;&quot;</span><br><span class="line">        do</span><br><span class="line">            # Determine which type of tcmalloc library the library supports</span><br><span class="line">            TCMALLOC=&quot;$(PATH=/sbin:/usr/sbin:$PATH ldconfig -p | grep -P $lib | head -n 1)&quot;</span><br><span class="line">            TC_INFO=($&#123;TCMALLOC//=&gt;/&#125;)</span><br><span class="line">            if [[ ! -z &quot;$&#123;TC_INFO&#125;&quot; ]]; then</span><br><span class="line">                echo &quot;Check TCMalloc: $&#123;TC_INFO&#125;&quot;</span><br><span class="line">                # Determine if the library is linked to libpthread and resolve undefined symbol: pthread_key_create</span><br><span class="line">                if [ $(echo &quot;$libc_vernum &lt; $libc_v234&quot; | bc) -eq 1 ]; then</span><br><span class="line">                    # glibc &lt; 2.34 pthread_key_create into libpthread.so. check linking libpthread.so...</span><br><span class="line">                    if ldd $&#123;TC_INFO[2]&#125; | grep -q &#x27;libpthread&#x27;; then</span><br><span class="line">                        echo &quot;$TC_INFO is linked with libpthread,execute LD_PRELOAD=$&#123;TC_INFO[2]&#125;&quot;</span><br><span class="line">                        # set fullpath LD_PRELOAD (To be on the safe side)</span><br><span class="line">                        export LD_PRELOAD=&quot;$&#123;TC_INFO[2]&#125;&quot;</span><br><span class="line">                        break</span><br><span class="line">                    else</span><br><span class="line">                        echo &quot;$TC_INFO is not linked with libpthread will trigger undefined symbol: pthread_Key_create error&quot;</span><br><span class="line">                    fi</span><br><span class="line">                else</span><br><span class="line">                    # Version 2.34 of libc.so (glibc) includes the pthread library IN GLIBC. (USE ubuntu 22.04 and modern linux system and WSL)</span><br><span class="line">                    # libc.so(glibc) is linked with a library that works in ALMOST ALL Linux userlands. SO NO CHECK!</span><br><span class="line">                    echo &quot;$TC_INFO is linked with libc.so,execute LD_PRELOAD=$&#123;TC_INFO[2]&#125;&quot;</span><br><span class="line">                    # set fullpath LD_PRELOAD (To be on the safe side)</span><br><span class="line">                    export LD_PRELOAD=&quot;$&#123;TC_INFO[2]&#125;&quot;</span><br><span class="line">                    break</span><br><span class="line">                fi</span><br><span class="line">            fi</span><br><span class="line">        done</span><br><span class="line">        if [[ -z &quot;$&#123;LD_PRELOAD&#125;&quot; ]]; then</span><br><span class="line">            printf &quot;\e[1m\e[31mCannot locate TCMalloc. Do you have tcmalloc or google-perftool installed on your system? (improves CPU memory usage)\e[0m\n&quot;</span><br><span class="line">        fi</span><br><span class="line">    fi</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>TCMalloc</code> 是 Google 开发的一个用于替代标准 C 库中的内存分配器的内存分配库。它旨在提供更高效的内存分配和释放操作，从而提高程序的性能和效率。</li>
+<li>定义了一个函数prepare_tcmalloc，在后面进行调用。</li>
+<li><code>bc</code> 是一个功能强大的命令行计算器，可以执行各种数学运算。它支持整数和浮点数运算，还可以处理变量、逻辑运算和条件判断。通过合理使用 <code>bc</code>，可以在命令行环境下方便地进行复杂的数学计算。</li>
+<li>在 <code>ldconfig</code> 命令的输出中，箭头 <code>=&gt;</code> 两端分别代表库文件和库文件的路径。</li>
+<li><code>LD_PRELOAD</code> 是一个用于指定在程序运行时首先加载的共享库（动态链接库）的环境变量。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">KEEP_GOING=1</span><br><span class="line">export SD_WEBUI_RESTART=tmp/restart</span><br><span class="line">while [[ &quot;$KEEP_GOING&quot; -eq &quot;1&quot; ]]; do</span><br><span class="line">    if [[ ! -z &quot;$&#123;ACCELERATE&#125;&quot; ]] &amp;&amp; [ $&#123;ACCELERATE&#125;=&quot;True&quot; ] &amp;&amp; [ -x &quot;$(command -v accelerate)&quot; ]; then</span><br><span class="line">        printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">        printf &quot;Accelerating launch.py...&quot;</span><br><span class="line">        printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">        prepare_tcmalloc</span><br><span class="line">        accelerate launch --num_cpu_threads_per_process=6 &quot;$&#123;LAUNCH_SCRIPT&#125;&quot; &quot;$@&quot;</span><br><span class="line">    else</span><br><span class="line">        printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">        printf &quot;Launching launch.py...&quot;</span><br><span class="line">        printf &quot;\n%s\n&quot; &quot;$&#123;delimiter&#125;&quot;</span><br><span class="line">        prepare_tcmalloc</span><br><span class="line">        &quot;$&#123;python_cmd&#125;&quot; -u &quot;$&#123;LAUNCH_SCRIPT&#125;&quot; &quot;$@&quot;</span><br><span class="line">    fi</span><br><span class="line"></span><br><span class="line">    if [[ ! -f tmp/restart ]]; then</span><br><span class="line">        KEEP_GOING=0</span><br><span class="line">    fi</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>这段 Shell 脚本是一个循环结构，它的主要作用是根据条件不断执行启动一个 Python 脚本 <code>launch.py</code> 的过程，并且根据是否存在一个文件 <code>tmp/restart</code> 决定是否继续循环执行。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>该脚本主要完成以下几点：</p>
+<ol>
+<li>检查项：操作系统位数、是否root权限运行、python-venv是否安装等</li>
+<li>配置虚拟python环境，默认目录为<code>./venv</code></li>
+<li>根据显卡型号配置pytorch的安装命令</li>
+<li>系统为linux时尝试使用TCMalloc库，它旨在提供更高效的内存分配和释放操作，从而提高程序的性能和效率。</li>
+<li>启动<code>launch.py</code></li>
+</ol>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="条件判断中-和-的区别"><a href="#条件判断中-和-的区别" class="headerlink" title="条件判断中[]和[[]]的区别"></a>条件判断中[]和[[]]的区别</h3><p>在Shell脚本中，<code>[]</code>和<code>[[]]</code>都是用于条件测试的结构，但它们之间有一些区别：</p>
+<ol>
+<li><strong><code>[]</code>（方括号）</strong>：<ul>
+<li><code>[]</code> 是传统的条件测试结构，也称为 test 命令。</li>
+<li>在使用<code>[]</code>时，需要注意空格的使用，例如，变量和操作符之间需要有空格分隔。</li>
+<li><code>[]</code> 只能进行基本的条件测试，例如比较字符串、文件测试等。</li>
+<li><code>[]</code> 中的条件测试使用 <code>[</code> 和 <code>]</code> 包围条件表达式，例如 <code>[ &quot;$var&quot; = &quot;value&quot; ]</code>。</li>
+</ul>
+</li>
+<li><strong><code>[[]]</code>（双方括号）</strong>：<ul>
+<li><code>[[</code> 和 <code>]]</code> 是 Bash 的关键字，而不是一个命令，它们提供了更加灵活和强大的条件测试功能。</li>
+<li><code>[[</code> 结构中不需要像 <code>[]</code> 那样的空格分隔。</li>
+<li><code>[[</code> 支持更多的条件测试，包括模式匹配、正则表达式、逻辑运算符等。</li>
+<li><code>[[</code> 中的条件测试使用 <code>[[</code> 和 <code>]]</code> 包围条件表达式，例如 <code>[[ $var == &quot;value&quot; ]]</code>。</li>
+</ul>
+</li>
+</ol>
+<p>比较：</p>
+<ul>
+<li>使用 <code>[]</code> 时，通常需要注意空格的使用，并且某些操作可能需要使用转义字符。</li>
+<li><code>[[</code> 提供了更加清晰和灵活的条件测试语法，因此在大多数情况下推荐使用 <code>[[</code> 进行条件测试。</li>
+</ul>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">bash</span><br><span class="line">复制代码</span><br><span class="line"># 使用 []</span><br><span class="line">if [ &quot;$var&quot; = &quot;value&quot; ]; then</span><br><span class="line">    echo &quot;Equal&quot;</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># 使用 [[]]</span><br><span class="line">if [[ $var == &quot;value&quot; ]]; then</span><br><span class="line">    echo &quot;Equal&quot;</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+
+<p>总的来说，<code>[[</code> 提供了更好的条件测试功能，更容易编写和阅读，因此在新的 Shell 脚本中推荐使用 <code>[[</code>。</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=https://funnydragonk.github.io/funnydragon.github.io/2024/05/22/stable-diffusion-webui-Shell%E8%84%9A%E6%9C%AC/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/funnydragon.github.io/2024/05/10/My-New-Post/" class="archive-article-date">
-  	<time datetime="2024-05-10T02:27:27.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-05-10</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/funnydragon.github.io/2024/05/10/My-New-Post/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">My New Post</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/funnydragon.github.io/2024/05/10/My-New-Post/">My New Post</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/funnydragon.github.io/2024/05/09/hello-world/" class="archive-article-date">
-  	<time datetime="2024-05-09T10:03:04.263Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2024-05-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/funnydragon.github.io/2024/05/09/hello-world/">Hello World</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
+  <div id="gitalk-container" style="padding: 0px 30px 0px 30px;"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+
+if(true){
+ var gitalk = new Gitalk({
+ clientID: 'Ov23liOwLm1OsCFDQLCm',
+ clientSecret: '1c02212661a7068ccab3f80c9cd1f5986fb20529',
+ repo: 'mycomments',
+ owner: 'FunnyDragonK',
+ admin: [],
+ id: 'Wed May 22 2024 17:00:20 GMT+0800',
+ distractionFreeMode: 'true'
+})
+gitalk.render('gitalk-container')
+}
+</script>
+
+ 
+
 
 
           </div>
@@ -269,8 +538,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
