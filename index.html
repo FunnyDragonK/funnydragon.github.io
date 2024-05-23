@@ -172,7 +172,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>stable-diffusion-webui中使用了一个shell脚本<code>webui.sh</code>进行启动，本文旨在通过阅读理解该脚本顺便学习一些shell脚本语法。成文流程如下：阅读<code>webui.sh</code>-&gt;遇到读不懂的地方-&gt;问chatGPT要解释-&gt;学习语法，同时将代码片段和关键解释记录下来。</p>
+        <h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>stable-diffusion-webui中使用了一个shell脚本<code>webui.sh</code>进行启动，本文旨在通过阅读理解该脚本顺便学习一些shell脚本语法。成文流程如下：阅读<code>webui.sh</code>-&gt;遇到读不懂的地方-&gt;问大语言模型要解释-&gt;学习语法，同时将代码片段和关键解释记录下来。</p>
 <h2 id="shell脚本理解"><a href="#shell脚本理解" class="headerlink" title="shell脚本理解"></a>shell脚本理解</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SCRIPT_DIR=$( cd -- &quot;$( dirname -- &quot;$&#123;BASH_SOURCE[0]&#125;&quot; )&quot; &amp;&gt; /dev/null &amp;&amp; pwd )</span><br></pre></td></tr></table></figure>
 
 <p>这个Shell命令用于获取正在执行的脚本文件所在的目录路径，并将其存储在变量 <code>SCRIPT_DIR</code> 中:</p>
